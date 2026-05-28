@@ -1,0 +1,60 @@
+body {
+    font-family: Arial;
+    background: #111;
+    color: white;
+    margin: 0;
+    text-align: center;
+}
+
+header {
+    background: #1c1c1c;
+    padding: 20px;
+    border-bottom: 2px solid #ffcc00;
+}
+
+h1 {
+    color: #ffcc00;
+}
+
+.menu {
+    margin: 20px;
+}
+
+.item {
+    background: #333;
+    padding: 5px 10px;
+    margin: 5px;
+    display: inline-block;
+    border-radius: 5px;
+}
+
+.mesas {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.mesa {
+    background: #222;
+    margin: 10px;
+    padding: 15px;
+    width: 300px;
+    border-radius: 10px;
+    border: 1px solid #444;
+}
+
+.btn {
+    display: inline-block;
+    padding: 5px 8px;
+    margin: 3px;
+    text-decoration: none;
+    border-radius: 5px;
+    color: white;
+    font-size: 12px;
+}
+
+.add { background: green; }
+.prep { background: orange; }
+.listo { background: blue; }
+.entregado { background: purple; }
+.clear { background: red; }

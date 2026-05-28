@@ -1,0 +1,3 @@
+cebolla,2
+cebolla,2
+salchicha,2
