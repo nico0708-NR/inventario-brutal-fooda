@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Brutal Food POS</title>
+</head>
+
+<body style="background:#111; color:white; text-align:center;">
+
+<h1>🍔 BRUTAL FOOD POS</h1>
+
+<a href="/ventas">📊 Ventas</a> |
+<a href="/logout">Salir</a>
+
+<hr>
+
+<h3>➕ Agregar producto</h3>
+
+<form action="/agregar_producto" method="POST">
+    <input name="nombre" placeholder="Nombre" required>
+    <input name="precio" type="number" placeholder="Precio" required>
+    <button>Agregar</button>
+</form>
+
+<hr>
+
+{% for mesa in mesas %}
+<div style="border:1px solid white; margin:10px; padding:10px;">
+
+<h3>Mesa {{ mesa.id }} - {{ mesa.estado }}</h3>
+
+<p>Pedidos:</p>
+
+{% for p in mesa.pedidos %}
+<div>
+    🍔 {{ p[1] }} - ${{ "{:,.0f}".format(p[2]).replace(",", ".") }}
+    <a href="/cancelar_pedido/{{ p[0] }}" style="color:red;">❌</a>
+</div>
+{% endfor %}
+
+<h3>Total: ${{ "{:,.0f}".format(mesa.total).replace(",", ".") }}</h3>
+
+<hr>
+
+{% for item in menu %}
+<div>
+    + {{ item[1] }} (${{ "{:,.0f}".format(item[2]).replace(",", ".") }})
+
+    <a href="/ordenar/{{ mesa.id }}/{{ item[1] }}">Agregar</a>
+
+    <a href="/eliminar_producto/{{ item[0] }}" style="color:red;">Eliminar</a>
+</div>
+{% endfor %}
+
+<br>
+
+<a href="/limpiar/{{ mesa.id }}">💵 Cobrar mesa</a>
+
+</div>
+{% endfor %}
+
+</body>
+</html>

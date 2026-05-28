@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Ventas</title>
+</head>
+
+<body style="background:#111; color:white; text-align:center;">
+
+<h1>📊 VENTAS</h1>
+
+<h2>Total: ${{ "{:,.0f}".format(total).replace(",", ".") }}</h2>
+
+<hr>
+
+{% for v in ventas %}
+<p>Mesa {{ v[1] }} - ${{ "{:,.0f}".format(v[2]).replace(",", ".") }} - {{ v[3] }}</p>
+{% endfor %}
+
+<br>
+
+<a href="/">Volver</a>
+
+</body>
+</html>
