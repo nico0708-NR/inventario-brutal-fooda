@@ -1,18 +1,82 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
+
 <head>
-    <title>Login</title>
+    <meta charset="UTF-8">
+    <title>Brutal Food Login</title>
 </head>
 
-<body style="background:#111; color:white; text-align:center;">
+<body style="
+    margin:0;
+    background:#111;
+    font-family:Arial;
+    color:white;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
+">
 
-<h1>🍔 BRUTAL FOOD</h1>
+    <div style="
+        width:350px;
+        text-align:center;
+    ">
 
-<form method="POST">
-    <input name="user" placeholder="Usuario"><br><br>
-    <input name="password" type="password" placeholder="Contraseña"><br><br>
-    <button>Entrar</button>
-</form>
+        <h1 style="
+            font-size:55px;
+            margin-bottom:40px;
+        ">
+            🍔 BRUTAL FOOD
+        </h1>
+
+        <form method="POST">
+
+            <input
+                type="text"
+                name="user"
+                placeholder="Iniciar sesión"
+                required
+                style="
+                    width:100%;
+                    padding:15px;
+                    margin-bottom:15px;
+                    border:none;
+                    border-radius:10px;
+                    font-size:18px;
+                "
+            >
+
+            <input
+                type="password"
+                name="password"
+                placeholder="Contraseña"
+                required
+                style="
+                    width:100%;
+                    padding:15px;
+                    margin-bottom:20px;
+                    border:none;
+                    border-radius:10px;
+                    font-size:18px;
+                "
+            >
+
+            <button style="
+                background:#ff9800;
+                color:white;
+                border:none;
+                padding:12px 30px;
+                border-radius:10px;
+                font-size:18px;
+                cursor:pointer;
+            ">
+                Entrar
+            </button>
+
+        </form>
+
+    </div>
 
 </body>
+
 </html>
