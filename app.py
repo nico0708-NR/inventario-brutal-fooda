@@ -76,7 +76,7 @@ def init_db():
     )
     """)
 
-    # CREAR ADMIN
+    # ADMIN
     admin = c.execute("""
     SELECT *
     FROM usuarios
@@ -95,7 +95,7 @@ def init_db():
             password_hash
         ))
 
-    # CREAR MESAS INICIALES
+    # MESAS INICIALES
     mesas = c.execute("""
     SELECT COUNT(*) as total
     FROM mesas
@@ -264,11 +264,11 @@ def home():
 @app.route("/agregar_producto", methods=["POST"])
 def agregar_producto():
 
-    conn = get_db()
-    c = conn.cursor()
-
     nombre = request.form["nombre"]
     precio = request.form["precio"]
+
+    conn = get_db()
+    c = conn.cursor()
 
     c.execute("""
     INSERT INTO menu (nombre, precio)
@@ -491,7 +491,7 @@ def ventas():
     ventas = c.execute("""
     SELECT *
     FROM ventas
-    ORDER BY fecha DESC
+    ORDER BY id DESC
     """).fetchall()
 
     total_general = c.execute("""
