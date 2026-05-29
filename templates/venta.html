@@ -1,24 +1,59 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
+
 <head>
+    <meta charset="UTF-8">
     <title>Ventas</title>
 </head>
 
-<body style="background:#111; color:white; text-align:center;">
+<body style="
+    background:#111;
+    color:white;
+    font-family:Arial;
+    padding:20px;
+">
 
-<h1>📊 VENTAS</h1>
+<h1>📊 Historial de Ventas</h1>
 
-<h2>Total: ${{ "{:,.0f}".format(total).replace(",", ".") }}</h2>
+<a href="/" style="color:lightgreen;">
+    ⬅ Volver
+</a>
 
 <hr>
 
-{% for v in ventas %}
-<p>Mesa {{ v[1] }} - ${{ "{:,.0f}".format(v[2]).replace(",", ".") }} - {{ v[3] }}</p>
+<h2>
+    💰 Total vendido:
+    ${{ "{:,.0f}".format(total_general).replace(",", ".") }}
+</h2>
+
+<hr>
+
+{% for venta in ventas %}
+
+<div style="
+    background:#222;
+    padding:15px;
+    margin-bottom:15px;
+    border-radius:10px;
+">
+
+    <h3>
+        Mesa {{ venta["mesa_id"] }}
+    </h3>
+
+    <p>
+        Total:
+        ${{ "{:,.0f}".format(venta["total"]).replace(",", ".") }}
+    </p>
+
+    <p>
+        Fecha:
+        {{ venta["fecha"] }}
+    </p>
+
+</div>
+
 {% endfor %}
-
-<br>
-
-<a href="/">Volver</a>
 
 </body>
 </html>

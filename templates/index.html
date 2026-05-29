@@ -13,240 +13,189 @@
     padding:20px;
 ">
 
-    <h1 style="text-align:center;">
-        🍔 BRUTAL FOOD POS
-    </h1>
+<h1 style="text-align:center;">
+    🍔 BRUTAL FOOD POS
+</h1>
 
-    <div style="
-        text-align:center;
-        margin-bottom:20px;
-    ">
+<div style="text-align:center; margin-bottom:20px;">
 
-        <a href="/ventas" style="color:yellow;">
-            📊 Ventas
-        </a>
+    <a href="/ventas" style="color:yellow;">
+        📊 Ventas
+    </a>
 
-        |
+    |
 
-        <a href="/registro" style="color:lightgreen;">
-            👤 Crear usuario
-        </a>
+    <a href="/logout" style="color:red;">
+        Cerrar sesión
+    </a>
 
-        |
+</div>
 
-        <a href="/logout" style="color:red;">
-            Cerrar sesión
-        </a>
+<hr>
 
-    </div>
+<h2>➕ Agregar producto</h2>
 
-    <hr>
+<form action="/agregar_producto" method="POST">
 
-    <!-- ======================= -->
-    <!-- AGREGAR PRODUCTO -->
-    <!-- ======================= -->
+    <input
+        type="text"
+        name="nombre"
+        placeholder="Nombre producto"
+        required
+    >
 
-    <h2>➕ Agregar producto</h2>
+    <input
+        type="number"
+        name="precio"
+        placeholder="Precio"
+        required
+    >
 
-    <form action="/agregar_producto" method="POST">
+    <button>
+        Agregar
+    </button>
 
-        <input
-            type="text"
-            name="nombre"
-            placeholder="Nombre del producto"
-            required
-            style="
-                padding:10px;
-                margin-bottom:10px;
-            "
-        >
+</form>
 
-        <input
-            type="number"
-            name="precio"
-            placeholder="Precio"
-            required
-            style="
-                padding:10px;
-                margin-bottom:10px;
-            "
-        >
+<hr>
 
-        <button style="
-            padding:10px;
-        ">
-            Agregar producto
-        </button>
+<h2>🪑 Agregar mesa</h2>
 
-    </form>
+<form action="/agregar_mesa" method="POST">
 
-    <hr>
+    <input
+        type="text"
+        name="nombre"
+        placeholder="Ej: Mesa VIP"
+        required
+    >
 
-    <!-- ======================= -->
-    <!-- AGREGAR MESA -->
-    <!-- ======================= -->
+    <button>
+        Crear mesa
+    </button>
 
-    <h2>🪑 Agregar mesa</h2>
+</form>
 
-    <form action="/agregar_mesa" method="POST">
+<hr>
 
-        <input
-            type="text"
-            name="nombre"
-            placeholder="Ejemplo: Mesa VIP"
-            required
-            style="
-                padding:10px;
-                margin-bottom:10px;
-            "
-        >
+{% for mesa in mesas %}
 
-        <button style="
-            padding:10px;
-        ">
-            Crear mesa
-        </button>
+<div style="
+    border:2px solid white;
+    padding:20px;
+    margin-bottom:20px;
+    border-radius:10px;
+">
 
-    </form>
+    <h2>
+        {{ mesa.nombre }}
+        -
+        {{ mesa.estado }}
+    </h2>
+
+    <a
+        href="/eliminar_mesa/{{ mesa.id }}"
+        style="color:red;"
+    >
+        ❌ Eliminar mesa
+    </a>
 
     <hr>
 
-    <!-- ======================= -->
-    <!-- MOSTRAR MESAS -->
-    <!-- ======================= -->
+    <h3>🧾 Pedidos</h3>
 
-    {% for mesa in mesas %}
+    {% if mesa.pedidos %}
 
-    <div style="
-        border:2px solid white;
-        border-radius:10px;
-        padding:20px;
-        margin-bottom:20px;
-    ">
-
-        <h2>
-            {{ mesa.nombre }}
-            -
-            {{ mesa.estado }}
-        </h2>
-
-        <a
-            href="/eliminar_mesa/{{ mesa.id }}"
-            style="
-                color:red;
-            "
-        >
-            ❌ Eliminar mesa
-        </a>
-
-        <hr>
-
-        <h3>🧾 Pedidos</h3>
-
-        {% if mesa.pedidos %}
-
-            {% for p in mesa.pedidos %}
-
-            <div style="
-                background:#222;
-                padding:10px;
-                margin-bottom:10px;
-                border-radius:5px;
-            ">
-
-                🍔 {{ p["producto"] }}
-
-                -
-
-                ${{ "{:,.0f}".format(p["precio"]).replace(",", ".") }}
-
-                <a
-                    href="/cancelar_pedido/{{ p['id'] }}"
-                    style="
-                        color:red;
-                        margin-left:10px;
-                    "
-                >
-                    ❌
-                </a>
-
-            </div>
-
-            {% endfor %}
-
-        {% else %}
-
-            <p>No hay pedidos.</p>
-
-        {% endif %}
-
-        <h3>
-            💰 Total:
-            ${{ "{:,.0f}".format(mesa.total).replace(",", ".") }}
-        </h3>
-
-        <hr>
-
-        <h3>🍟 Menú</h3>
-
-        {% for item in menu %}
+        {% for p in mesa.pedidos %}
 
         <div style="
-            background:#1b1b1b;
+            background:#222;
             padding:10px;
             margin-bottom:10px;
-            border-radius:5px;
         ">
 
-            {{ item["nombre"] }}
+            🍔 {{ p["producto"] }}
 
             -
 
-            ${{ "{:,.0f}".format(item["precio"]).replace(",", ".") }}
+            ${{ "{:,.0f}".format(p["precio"]).replace(",", ".") }}
 
             <a
-                href="/ordenar/{{ mesa.id }}/{{ item['id'] }}"
-                style="
-                    color:lightgreen;
-                    margin-left:10px;
-                "
+                href="/cancelar_pedido/{{ p['id'] }}"
+                style="color:red;"
             >
-                ➕ Agregar
-            </a>
-
-            <a
-                href="/eliminar_producto/{{ item['id'] }}"
-                style="
-                    color:red;
-                    margin-left:10px;
-                "
-            >
-                🗑 Eliminar
+                ❌
             </a>
 
         </div>
 
         {% endfor %}
 
-        <br>
+    {% else %}
+
+        <p>No hay pedidos.</p>
+
+    {% endif %}
+
+    <h3>
+        💰 Total:
+        ${{ "{:,.0f}".format(mesa.total).replace(",", ".") }}
+    </h3>
+
+    <hr>
+
+    <h3>🍟 Menú</h3>
+
+    {% for item in menu %}
+
+    <div style="
+        background:#1b1b1b;
+        padding:10px;
+        margin-bottom:10px;
+    ">
+
+        {{ item["nombre"] }}
+
+        -
+
+        ${{ "{:,.0f}".format(item["precio"]).replace(",", ".") }}
 
         <a
-            href="/limpiar/{{ mesa.id }}"
-            style="
-                background:green;
-                color:white;
-                padding:10px 20px;
-                border-radius:5px;
-                text-decoration:none;
-            "
+            href="/ordenar/{{ mesa.id }}/{{ item['id'] }}"
+            style="color:lightgreen;"
         >
-            💵 Cobrar mesa
+            ➕ Agregar
+        </a>
+
+        <a
+            href="/eliminar_producto/{{ item['id'] }}"
+            style="color:red;"
+        >
+            🗑 Eliminar
         </a>
 
     </div>
 
     {% endfor %}
 
-</body>
+    <br>
 
+    <a
+        href="/limpiar/{{ mesa.id }}"
+        style="
+            background:green;
+            color:white;
+            padding:10px 20px;
+            text-decoration:none;
+            border-radius:5px;
+        "
+    >
+        💵 Cobrar mesa
+    </a>
+
+</div>
+
+{% endfor %}
+
+</body>
 </html>

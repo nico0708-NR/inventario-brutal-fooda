@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, redirect, session
-import sqlite3
 from werkzeug.security import generate_password_hash, check_password_hash
+import sqlite3
 
 app = Flask(__name__)
 app.secret_key = "brutalfood_secret"
@@ -11,21 +11,25 @@ DB = "restaurante.db"
 # =========================
 # CONEXIÓN DB
 # =========================
+
 def get_db():
-    conn = sqlite3.connect(DB, timeout=10)
+
+    conn = sqlite3.connect(DB)
     conn.row_factory = sqlite3.Row
+
     return conn
 
 
 # =========================
-# CREAR BASE DE DATOS
+# CREAR DB
 # =========================
+
 def init_db():
 
     conn = get_db()
     c = conn.cursor()
 
-    # ---------------- USUARIOS ----------------
+    # USUARIOS
     c.execute("""
     CREATE TABLE IF NOT EXISTS usuarios (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -34,7 +38,7 @@ def init_db():
     )
     """)
 
-    # ---------------- MESAS ----------------
+    # MESAS
     c.execute("""
     CREATE TABLE IF NOT EXISTS mesas (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -43,7 +47,16 @@ def init_db():
     )
     """)
 
-    # ---------------- PEDIDOS ----------------
+    # MENU
+    c.execute("""
+    CREATE TABLE IF NOT EXISTS menu (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        nombre TEXT,
+        precio REAL
+    )
+    """)
+
+    # PEDIDOS
     c.execute("""
     CREATE TABLE IF NOT EXISTS pedidos (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -53,16 +66,7 @@ def init_db():
     )
     """)
 
-    # ---------------- MENU ----------------
-    c.execute("""
-    CREATE TABLE IF NOT EXISTS menu (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        nombre TEXT,
-        precio REAL
-    )
-    """)
-
-    # ---------------- VENTAS ----------------
+    # VENTAS
     c.execute("""
     CREATE TABLE IF NOT EXISTS ventas (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -72,11 +76,10 @@ def init_db():
     )
     """)
 
-    # =========================
     # CREAR ADMIN
-    # =========================
     admin = c.execute("""
-    SELECT * FROM usuarios
+    SELECT *
+    FROM usuarios
     WHERE usuario=?
     """, ("admin",)).fetchone()
 
@@ -87,13 +90,14 @@ def init_db():
         c.execute("""
         INSERT INTO usuarios (usuario, password)
         VALUES (?,?)
-        """, ("admin", password_hash))
+        """, (
+            "admin",
+            password_hash
+        ))
 
-    # =========================
     # CREAR MESAS INICIALES
-    # =========================
     mesas = c.execute("""
-    SELECT COUNT(*) AS total
+    SELECT COUNT(*) as total
     FROM mesas
     """).fetchone()["total"]
 
@@ -104,7 +108,10 @@ def init_db():
             c.execute("""
             INSERT INTO mesas (nombre, estado)
             VALUES (?,?)
-            """, (f"Mesa {i}", "Libre"))
+            """, (
+                f"Mesa {i}",
+                "Libre"
+            ))
 
     conn.commit()
     conn.close()
@@ -116,6 +123,7 @@ init_db()
 # =========================
 # LOGIN
 # =========================
+
 @app.route("/login", methods=["GET", "POST"])
 def login():
 
@@ -128,7 +136,8 @@ def login():
         c = conn.cursor()
 
         user = c.execute("""
-        SELECT * FROM usuarios
+        SELECT *
+        FROM usuarios
         WHERE usuario=?
         """, (usuario,)).fetchone()
 
@@ -137,9 +146,10 @@ def login():
         if user and check_password_hash(user["password"], password):
 
             session["user"] = usuario
+
             return redirect("/")
 
-        return "Usuario o contraseña incorrectos"
+        return "Usuario o contraseña incorrecta"
 
     return render_template("login.html")
 
@@ -147,6 +157,7 @@ def login():
 # =========================
 # REGISTRO
 # =========================
+
 @app.route("/registro", methods=["GET", "POST"])
 def registro():
 
@@ -157,23 +168,27 @@ def registro():
 
         password_hash = generate_password_hash(password)
 
-        try:
+        conn = get_db()
+        c = conn.cursor()
 
-            conn = get_db()
-            c = conn.cursor()
+        try:
 
             c.execute("""
             INSERT INTO usuarios (usuario, password)
             VALUES (?,?)
-            """, (usuario, password_hash))
+            """, (
+                usuario,
+                password_hash
+            ))
 
             conn.commit()
-            conn.close()
-
-            return redirect("/login")
 
         except:
             return "Ese usuario ya existe"
+
+        conn.close()
+
+        return redirect("/login")
 
     return render_template("registro.html")
 
@@ -181,16 +196,19 @@ def registro():
 # =========================
 # LOGOUT
 # =========================
+
 @app.route("/logout")
 def logout():
 
     session.clear()
+
     return redirect("/login")
 
 
 # =========================
 # HOME
 # =========================
+
 @app.route("/")
 def home():
 
@@ -201,13 +219,13 @@ def home():
     c = conn.cursor()
 
     mesas = c.execute("""
-    SELECT * FROM mesas
-    ORDER BY id ASC
+    SELECT *
+    FROM mesas
     """).fetchall()
 
     menu = c.execute("""
-    SELECT * FROM menu
-    ORDER BY id DESC
+    SELECT *
+    FROM menu
     """).fetchall()
 
     mesas_data = []
@@ -215,11 +233,12 @@ def home():
     for mesa in mesas:
 
         pedidos = c.execute("""
-        SELECT * FROM pedidos
+        SELECT *
+        FROM pedidos
         WHERE mesa_id=?
         """, (mesa["id"],)).fetchall()
 
-        total = sum([pedido["precio"] for pedido in pedidos])
+        total = sum([p["precio"] for p in pedidos])
 
         mesas_data.append({
             "id": mesa["id"],
@@ -239,74 +258,25 @@ def home():
 
 
 # =========================
-# AGREGAR MESA
-# =========================
-@app.route("/agregar_mesa", methods=["POST"])
-def agregar_mesa():
-
-    if "user" not in session:
-        return redirect("/login")
-
-    nombre = request.form["nombre"]
-
-    conn = get_db()
-    c = conn.cursor()
-
-    c.execute("""
-    INSERT INTO mesas (nombre, estado)
-    VALUES (?,?)
-    """, (nombre, "Libre"))
-
-    conn.commit()
-    conn.close()
-
-    return redirect("/")
-
-
-# =========================
-# ELIMINAR MESA
-# =========================
-@app.route("/eliminar_mesa/<int:id>")
-def eliminar_mesa(id):
-
-    conn = get_db()
-    c = conn.cursor()
-
-    c.execute("""
-    DELETE FROM pedidos
-    WHERE mesa_id=?
-    """, (id,))
-
-    c.execute("""
-    DELETE FROM mesas
-    WHERE id=?
-    """, (id,))
-
-    conn.commit()
-    conn.close()
-
-    return redirect("/")
-
-
-# =========================
 # AGREGAR PRODUCTO
 # =========================
+
 @app.route("/agregar_producto", methods=["POST"])
 def agregar_producto():
 
-    if "user" not in session:
-        return redirect("/login")
+    conn = get_db()
+    c = conn.cursor()
 
     nombre = request.form["nombre"]
     precio = request.form["precio"]
 
-    conn = get_db()
-    c = conn.cursor()
-
     c.execute("""
     INSERT INTO menu (nombre, precio)
     VALUES (?,?)
-    """, (nombre, float(precio)))
+    """, (
+        nombre,
+        precio
+    ))
 
     conn.commit()
     conn.close()
@@ -317,6 +287,7 @@ def agregar_producto():
 # =========================
 # ELIMINAR PRODUCTO
 # =========================
+
 @app.route("/eliminar_producto/<int:id>")
 def eliminar_producto(id):
 
@@ -335,8 +306,61 @@ def eliminar_producto(id):
 
 
 # =========================
+# AGREGAR MESA
+# =========================
+
+@app.route("/agregar_mesa", methods=["POST"])
+def agregar_mesa():
+
+    nombre = request.form["nombre"]
+
+    conn = get_db()
+    c = conn.cursor()
+
+    c.execute("""
+    INSERT INTO mesas (nombre, estado)
+    VALUES (?,?)
+    """, (
+        nombre,
+        "Libre"
+    ))
+
+    conn.commit()
+    conn.close()
+
+    return redirect("/")
+
+
+# =========================
+# ELIMINAR MESA
+# =========================
+
+@app.route("/eliminar_mesa/<int:id>")
+def eliminar_mesa(id):
+
+    conn = get_db()
+    c = conn.cursor()
+
+    c.execute("""
+    DELETE FROM mesas
+    WHERE id=?
+    """, (id,))
+
+    c.execute("""
+    DELETE FROM pedidos
+    WHERE mesa_id=?
+    """, (id,))
+
+    conn.commit()
+    conn.close()
+
+    return redirect("/")
+
+
+# =========================
 # AGREGAR PEDIDO
 # =========================
+
 @app.route("/ordenar/<int:mesa>/<int:producto_id>")
 def ordenar(mesa, producto_id):
 
@@ -344,14 +368,19 @@ def ordenar(mesa, producto_id):
     c = conn.cursor()
 
     producto = c.execute("""
-    SELECT * FROM menu
+    SELECT *
+    FROM menu
     WHERE id=?
     """, (producto_id,)).fetchone()
 
     if producto:
 
         c.execute("""
-        INSERT INTO pedidos (mesa_id, producto, precio)
+        INSERT INTO pedidos (
+            mesa_id,
+            producto,
+            precio
+        )
         VALUES (?,?,?)
         """, (
             mesa,
@@ -363,7 +392,10 @@ def ordenar(mesa, producto_id):
         UPDATE mesas
         SET estado=?
         WHERE id=?
-        """, ("Ocupada", mesa))
+        """, (
+            "Ocupada",
+            mesa
+        ))
 
     conn.commit()
     conn.close()
@@ -374,38 +406,17 @@ def ordenar(mesa, producto_id):
 # =========================
 # CANCELAR PEDIDO
 # =========================
+
 @app.route("/cancelar_pedido/<int:id>")
 def cancelar_pedido(id):
 
     conn = get_db()
     c = conn.cursor()
 
-    mesa = c.execute("""
-    SELECT mesa_id
-    FROM pedidos
-    WHERE id=?
-    """, (id,)).fetchone()
-
     c.execute("""
     DELETE FROM pedidos
     WHERE id=?
     """, (id,))
-
-    if mesa:
-
-        restantes = c.execute("""
-        SELECT COUNT(*) AS total
-        FROM pedidos
-        WHERE mesa_id=?
-        """, (mesa["mesa_id"],)).fetchone()["total"]
-
-        if restantes == 0:
-
-            c.execute("""
-            UPDATE mesas
-            SET estado=?
-            WHERE id=?
-            """, ("Libre", mesa["mesa_id"]))
 
     conn.commit()
     conn.close()
@@ -416,6 +427,7 @@ def cancelar_pedido(id):
 # =========================
 # COBRAR MESA
 # =========================
+
 @app.route("/limpiar/<int:mesa>")
 def limpiar(mesa):
 
@@ -423,7 +435,7 @@ def limpiar(mesa):
     c = conn.cursor()
 
     total = c.execute("""
-    SELECT SUM(precio) AS total
+    SELECT SUM(precio) as total
     FROM pedidos
     WHERE mesa_id=?
     """, (mesa,)).fetchone()["total"]
@@ -432,9 +444,16 @@ def limpiar(mesa):
         total = 0
 
     c.execute("""
-    INSERT INTO ventas (mesa_id, total, fecha)
+    INSERT INTO ventas (
+        mesa_id,
+        total,
+        fecha
+    )
     VALUES (?, ?, datetime('now'))
-    """, (mesa, total))
+    """, (
+        mesa,
+        total
+    ))
 
     c.execute("""
     DELETE FROM pedidos
@@ -445,7 +464,10 @@ def limpiar(mesa):
     UPDATE mesas
     SET estado=?
     WHERE id=?
-    """, ("Libre", mesa))
+    """, (
+        "Libre",
+        mesa
+    ))
 
     conn.commit()
     conn.close()
@@ -456,6 +478,7 @@ def limpiar(mesa):
 # =========================
 # VENTAS
 # =========================
+
 @app.route("/ventas")
 def ventas():
 
@@ -466,30 +489,31 @@ def ventas():
     c = conn.cursor()
 
     ventas = c.execute("""
-    SELECT * FROM ventas
-    ORDER BY id DESC
+    SELECT *
+    FROM ventas
+    ORDER BY fecha DESC
     """).fetchall()
 
-    total = c.execute("""
-    SELECT SUM(total) AS total
+    total_general = c.execute("""
+    SELECT SUM(total) as total
     FROM ventas
     """).fetchone()["total"]
 
-    conn.close()
+    if total_general is None:
+        total_general = 0
 
-    if total is None:
-        total = 0
+    conn.close()
 
     return render_template(
         "ventas.html",
         ventas=ventas,
-        total=total
+        total_general=total_general
     )
 
 
 # =========================
-# EJECUTAR APP
+# EJECUTAR
 # =========================
+
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000) 
-    print("BRUTAL FOOD ACTUALIZADO")
+    app.run(host="0.0.0.0", port=5000)
