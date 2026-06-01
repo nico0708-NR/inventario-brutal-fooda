@@ -1,5 +1,4 @@
 from flask import Flask, render_template, request, redirect, session
-from werkzeug.security import generate_password_hash, check_password_hash
 import sqlite3
 
 app = Flask(__name__)
@@ -18,8 +17,6 @@ def get_db():
 
     conn.execute("PRAGMA journal_mode=WAL")
 
-    conn.row_factory = sqlite3.Row
-
     return conn
 
 
@@ -32,30 +29,11 @@ def init_db():
     conn = get_db()
     c = conn.cursor()
 
-    # USUARIOS
-    c.execute("""
-    CREATE TABLE IF NOT EXISTS usuarios (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        usuario TEXT UNIQUE,
-        password TEXT
-    )
-    """)
-
     # MESAS
     c.execute("""
     CREATE TABLE IF NOT EXISTS mesas (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        nombre TEXT,
+        id INTEGER PRIMARY KEY,
         estado TEXT
-    )
-    """)
-
-    # MENU
-    c.execute("""
-    CREATE TABLE IF NOT EXISTS menu (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        nombre TEXT,
-        precio REAL
     )
     """)
 
@@ -65,6 +43,15 @@ def init_db():
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         mesa_id INTEGER,
         producto TEXT,
+        precio REAL
+    )
+    """)
+
+    # MENU
+    c.execute("""
+    CREATE TABLE IF NOT EXISTS menu (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        nombre TEXT,
         precio REAL
     )
     """)
@@ -79,42 +66,16 @@ def init_db():
     )
     """)
 
-    # CREAR ADMIN
-    admin = c.execute("""
-    SELECT *
-    FROM usuarios
-    WHERE usuario=?
-    """, ("nicolasjef",)).fetchone()
-
-    if not admin:
-
-        password_hash = generate_password_hash("123450808")
+    # CREAR 6 MESAS
+    for i in range(1, 7):
 
         c.execute("""
-        INSERT INTO usuarios (usuario, password)
+        INSERT OR IGNORE INTO mesas (id, estado)
         VALUES (?,?)
         """, (
-            "nicolasjef",
-            password_hash
+            i,
+            "Libre"
         ))
-
-    # CREAR 6 MESAS
-    mesas = c.execute("""
-    SELECT COUNT(*) as total
-    FROM mesas
-    """).fetchone()["total"]
-
-    if mesas == 0:
-
-        for i in range(1, 7):
-
-            c.execute("""
-            INSERT INTO mesas (nombre, estado)
-            VALUES (?,?)
-            """, (
-                f"Mesa {i}",
-                "Libre"
-            ))
 
     conn.commit()
     conn.close()
@@ -135,24 +96,14 @@ def login():
         usuario = request.form["user"]
         password = request.form["password"]
 
-        conn = get_db()
-        c = conn.cursor()
-
-        user = c.execute("""
-        SELECT *
-        FROM usuarios
-        WHERE usuario=?
-        """, (usuario,)).fetchone()
-
-        conn.close()
-
-        if user and check_password_hash(user["password"], password):
+        # USUARIO FIJO
+        if usuario == "nicolasjef" and password == "123450808":
 
             session["user"] = usuario
 
             return redirect("/")
 
-        return "Usuario o contraseña incorrecta"
+        return "Usuario o contraseña incorrectos"
 
     return render_template("login.html")
 
@@ -200,14 +151,13 @@ def home():
         SELECT *
         FROM pedidos
         WHERE mesa_id=?
-        """, (mesa["id"],)).fetchall()
+        """, (mesa[0],)).fetchall()
 
-        total = sum([p["precio"] for p in pedidos])
+        total = sum([pedido[3] for pedido in pedidos])
 
         mesas_data.append({
-            "id": mesa["id"],
-            "nombre": mesa["nombre"],
-            "estado": mesa["estado"],
+            "id": mesa[0],
+            "estado": mesa[1],
             "pedidos": pedidos,
             "total": total
         })
@@ -276,64 +226,6 @@ def eliminar_producto(id):
 
 
 # =========================
-# AGREGAR MESA
-# =========================
-
-@app.route("/agregar_mesa", methods=["POST"])
-def agregar_mesa():
-
-    if "user" not in session:
-        return redirect("/login")
-
-    nombre = request.form["nombre"]
-
-    conn = get_db()
-    c = conn.cursor()
-
-    c.execute("""
-    INSERT INTO mesas (nombre, estado)
-    VALUES (?,?)
-    """, (
-        nombre,
-        "Libre"
-    ))
-
-    conn.commit()
-    conn.close()
-
-    return redirect("/")
-
-
-# =========================
-# ELIMINAR MESA
-# =========================
-
-@app.route("/eliminar_mesa/<int:id>")
-def eliminar_mesa(id):
-
-    if "user" not in session:
-        return redirect("/login")
-
-    conn = get_db()
-    c = conn.cursor()
-
-    c.execute("""
-    DELETE FROM mesas
-    WHERE id=?
-    """, (id,))
-
-    c.execute("""
-    DELETE FROM pedidos
-    WHERE mesa_id=?
-    """, (id,))
-
-    conn.commit()
-    conn.close()
-
-    return redirect("/")
-
-
-# =========================
 # AGREGAR PEDIDO
 # =========================
 
@@ -347,7 +239,7 @@ def ordenar(mesa, producto_id):
     c = conn.cursor()
 
     producto = c.execute("""
-    SELECT *
+    SELECT nombre, precio
     FROM menu
     WHERE id=?
     """, (producto_id,)).fetchone()
@@ -363,8 +255,8 @@ def ordenar(mesa, producto_id):
         VALUES (?,?,?)
         """, (
             mesa,
-            producto["nombre"],
-            producto["precio"]
+            producto[0],
+            producto[1]
         ))
 
         c.execute("""
@@ -420,10 +312,10 @@ def limpiar(mesa):
     c = conn.cursor()
 
     total = c.execute("""
-    SELECT SUM(precio) as total
+    SELECT SUM(precio)
     FROM pedidos
     WHERE mesa_id=?
-    """, (mesa,)).fetchone()["total"]
+    """, (mesa,)).fetchone()[0]
 
     if total is None:
         total = 0
@@ -480,9 +372,9 @@ def ventas():
     """).fetchall()
 
     total_general = c.execute("""
-    SELECT SUM(total) as total
+    SELECT SUM(total)
     FROM ventas
-    """).fetchone()["total"]
+    """).fetchone()[0]
 
     if total_general is None:
         total_general = 0
