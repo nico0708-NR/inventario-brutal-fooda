@@ -14,7 +14,10 @@ DB = "restaurante.db"
 
 def get_db():
 
-    conn = sqlite3.connect(DB)
+    conn = sqlite3.connect(DB, timeout=10)
+
+    conn.execute("PRAGMA journal_mode=WAL")
+
     conn.row_factory = sqlite3.Row
 
     return conn
@@ -76,26 +79,26 @@ def init_db():
     )
     """)
 
-    # ADMIN
+    # CREAR ADMIN
     admin = c.execute("""
     SELECT *
     FROM usuarios
     WHERE usuario=?
-    """, ("admin",)).fetchone()
+    """, ("nicolasjef",)).fetchone()
 
     if not admin:
 
-        password_hash = generate_password_hash("123456")
+        password_hash = generate_password_hash("123450808")
 
         c.execute("""
         INSERT INTO usuarios (usuario, password)
         VALUES (?,?)
         """, (
-            "admin",
+            "nicolasjef",
             password_hash
         ))
 
-    # MESAS INICIALES
+    # CREAR 6 MESAS
     mesas = c.execute("""
     SELECT COUNT(*) as total
     FROM mesas
@@ -152,45 +155,6 @@ def login():
         return "Usuario o contraseña incorrecta"
 
     return render_template("login.html")
-
-
-# =========================
-# REGISTRO
-# =========================
-
-@app.route("/registro", methods=["GET", "POST"])
-def registro():
-
-    if request.method == "POST":
-
-        usuario = request.form["user"]
-        password = request.form["password"]
-
-        password_hash = generate_password_hash(password)
-
-        conn = get_db()
-        c = conn.cursor()
-
-        try:
-
-            c.execute("""
-            INSERT INTO usuarios (usuario, password)
-            VALUES (?,?)
-            """, (
-                usuario,
-                password_hash
-            ))
-
-            conn.commit()
-
-        except:
-            return "Ese usuario ya existe"
-
-        conn.close()
-
-        return redirect("/login")
-
-    return render_template("registro.html")
 
 
 # =========================
@@ -264,6 +228,9 @@ def home():
 @app.route("/agregar_producto", methods=["POST"])
 def agregar_producto():
 
+    if "user" not in session:
+        return redirect("/login")
+
     nombre = request.form["nombre"]
     precio = request.form["precio"]
 
@@ -275,7 +242,7 @@ def agregar_producto():
     VALUES (?,?)
     """, (
         nombre,
-        precio
+        float(precio)
     ))
 
     conn.commit()
@@ -290,6 +257,9 @@ def agregar_producto():
 
 @app.route("/eliminar_producto/<int:id>")
 def eliminar_producto(id):
+
+    if "user" not in session:
+        return redirect("/login")
 
     conn = get_db()
     c = conn.cursor()
@@ -311,6 +281,9 @@ def eliminar_producto(id):
 
 @app.route("/agregar_mesa", methods=["POST"])
 def agregar_mesa():
+
+    if "user" not in session:
+        return redirect("/login")
 
     nombre = request.form["nombre"]
 
@@ -338,6 +311,9 @@ def agregar_mesa():
 @app.route("/eliminar_mesa/<int:id>")
 def eliminar_mesa(id):
 
+    if "user" not in session:
+        return redirect("/login")
+
     conn = get_db()
     c = conn.cursor()
 
@@ -363,6 +339,9 @@ def eliminar_mesa(id):
 
 @app.route("/ordenar/<int:mesa>/<int:producto_id>")
 def ordenar(mesa, producto_id):
+
+    if "user" not in session:
+        return redirect("/login")
 
     conn = get_db()
     c = conn.cursor()
@@ -410,6 +389,9 @@ def ordenar(mesa, producto_id):
 @app.route("/cancelar_pedido/<int:id>")
 def cancelar_pedido(id):
 
+    if "user" not in session:
+        return redirect("/login")
+
     conn = get_db()
     c = conn.cursor()
 
@@ -430,6 +412,9 @@ def cancelar_pedido(id):
 
 @app.route("/limpiar/<int:mesa>")
 def limpiar(mesa):
+
+    if "user" not in session:
+        return redirect("/login")
 
     conn = get_db()
     c = conn.cursor()
@@ -516,4 +501,4 @@ def ventas():
 # =========================
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000)
+    app.run(debug=True)
