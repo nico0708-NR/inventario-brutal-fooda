@@ -1,91 +1,98 @@
+<!-- templates/login.html -->
+
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Brutal Food Login</title>
-</head>
 
-<body style="
-    margin:0;
-    background:#111;
-    font-family:Arial;
-    color:white;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    height:100vh;
-">
+    <style>
 
-<div style="
-    width:350px;
-    text-align:center;
-">
+        body{
+            margin:0;
+            padding:0;
+            background:#111;
+            font-family:Arial;
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            height:100vh;
+        }
 
-    <h1 style="
-        font-size:55px;
-        margin-bottom:40px;
-    ">
-        🍔 BRUTAL FOOD
-    </h1>
+        .login-box{
+            background:#1e1e1e;
+            padding:40px;
+            border-radius:20px;
+            width:320px;
+            text-align:center;
+            box-shadow:0 0 20px rgba(0,0,0,0.5);
+        }
 
-    <form method="POST">
+        h1{
+            color:#ff3c00;
+            margin-bottom:30px;
+        }
 
-        <input
-            type="text"
-            name="user"
-            placeholder="Usuario"
-            required
-            style="
-                width:100%;
-                padding:15px;
-                margin-bottom:15px;
-                border:none;
-                border-radius:10px;
-                font-size:18px;
-            "
-        >
-
-        <input
-            type="password"
-            name="password"
-            placeholder="Contraseña"
-            required
-            style="
-                width:100%;
-                padding:15px;
-                margin-bottom:20px;
-                border:none;
-                border-radius:10px;
-                font-size:18px;
-            "
-        >
-
-        <button style="
-            background:#ff9800;
-            color:white;
+        input{
+            width:100%;
+            padding:14px;
+            margin-bottom:15px;
             border:none;
-            padding:12px 30px;
             border-radius:10px;
-            font-size:18px;
+            background:#2c2c2c;
+            color:white;
+            font-size:16px;
+        }
+
+        button{
+            width:100%;
+            padding:14px;
+            border:none;
+            border-radius:10px;
+            background:#ff3c00;
+            color:white;
+            font-size:17px;
             cursor:pointer;
-        ">
-            Entrar
-        </button>
+            font-weight:bold;
+        }
 
-    </form>
+        button:hover{
+            opacity:0.9;
+        }
 
-    <br>
+    </style>
 
-    <a href="/registro" style="
-        color:#00ff99;
-        text-decoration:none;
-        font-size:18px;
-    ">
-        ➕ Crear usuario
-    </a>
+</head>
+<body>
 
-</div>
+    <div class="login-box">
+
+        <h1>🔥 Brutal Food</h1>
+
+        <form method="POST">
+
+            <input 
+                type="text"
+                name="user"
+                placeholder="Usuario"
+                required
+            >
+
+            <input 
+                type="password"
+                name="password"
+                placeholder="Contraseña"
+                required
+            >
+
+            <button type="submit">
+                Entrar
+            </button>
+
+        </form>
+
+    </div>
 
 </body>
 </html>
