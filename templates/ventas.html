@@ -1,71 +1,153 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
+
     <meta charset="UTF-8">
-    <title>Ventas</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Ventas | Brutal Food</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+            font-family:'Poppins',sans-serif;
+        }
+
+        body{
+            background:#0d0d0d;
+            color:white;
+            padding:40px;
+        }
+
+        .top{
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            margin-bottom:40px;
+        }
+
+        h1{
+            font-size:38px;
+            color:#ff5a1f;
+        }
+
+        .volver{
+            background:#ff5a1f;
+            color:white;
+            text-decoration:none;
+            padding:14px 20px;
+            border-radius:14px;
+            font-weight:600;
+        }
+
+        .total{
+            background:#161616;
+            border:1px solid #252525;
+            padding:25px;
+            border-radius:24px;
+            margin-bottom:35px;
+        }
+
+        .total h2{
+            color:#8d8d8d;
+            margin-bottom:10px;
+        }
+
+        .total p{
+            font-size:42px;
+            color:#00d084;
+            font-weight:700;
+        }
+
+        .ventas{
+            display:grid;
+            gap:20px;
+        }
+
+        .venta{
+            background:#161616;
+            border:1px solid #252525;
+            border-radius:22px;
+            padding:25px;
+        }
+
+        .venta h3{
+            margin-bottom:10px;
+            font-size:24px;
+        }
+
+        .precio{
+            color:#ff5a1f;
+            font-size:28px;
+            font-weight:700;
+            margin-bottom:10px;
+        }
+
+        .fecha{
+            color:#8d8d8d;
+        }
+
+    </style>
+
 </head>
 
-<body style="
-    background:#111;
-    color:white;
-    font-family:Arial;
-    padding:20px;
-">
+<body>
 
-<h1>📊 Historial de Ventas</h1>
+    <div class="top">
 
-<a href="/" style="
-    color:lightgreen;
-    text-decoration:none;
-">
-    ⬅ Volver
-</a>
+        <h1>
+            💰 Ventas
+        </h1>
 
-<hr>
+        <a href="/" class="volver">
+            ← Volver
+        </a>
 
-<h2>
-    💰 Total vendido:
-    ${{ "{:,.0f}".format(total_general).replace(",", ".") }}
-</h2>
+    </div>
 
-<hr>
+    <div class="total">
 
-{% if ventas %}
-
-    {% for venta in ventas %}
-
-    <div style="
-        background:#222;
-        padding:15px;
-        margin-bottom:15px;
-        border-radius:10px;
-    ">
-
-        <h3>
-            Mesa {{ venta["mesa_id"] }}
-        </h3>
+        <h2>Total General</h2>
 
         <p>
-            Total:
-            ${{ "{:,.0f}".format(venta["total"]).replace(",", ".") }}
-        </p>
-
-        <p>
-            Fecha:
-            {{ venta["fecha"] }}
+            ${{ "{:,.0f}".format(total_general).replace(",", ".") }}
         </p>
 
     </div>
 
-    {% endfor %}
+    <div class="ventas">
 
-{% else %}
+        {% for venta in ventas %}
 
-    <p>No hay ventas registradas.</p>
+        <div class="venta">
 
-{% endif %}
+            <h3>
+                Mesa {{ venta[1] }}
+            </h3>
+
+            <div class="precio">
+
+                ${{ "{:,.0f}".format(venta[2]).replace(",", ".") }}
+
+            </div>
+
+            <div class="fecha">
+
+                {{ venta[3] }}
+
+            </div>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
 
 </body>
-
 </html>
