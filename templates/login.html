@@ -1,96 +1,100 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Brutal Food Login</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login Brutal Food</title>
 
-    <style>
-        body{
-            margin:0;
-            padding:0;
-            background:#111;
-            font-family:Arial;
-            display:flex;
-            justify-content:center;
-            align-items:center;
-            height:100vh;
-        }
+<style>
 
-        .login-box{
-            background:#1e1e1e;
-            padding:40px;
-            border-radius:20px;
-            width:320px;
-            text-align:center;
-            box-shadow:0 0 20px rgba(0,0,0,0.5);
-        }
+body{
+    margin:0;
+    background:#0d0d0d;
+    font-family:Arial;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
+    color:white;
+}
 
-        h1{
-            color:#ff3c00;
-            margin-bottom:30px;
-        }
+.box{
+    background:#161616;
+    padding:40px;
+    border-radius:20px;
+    width:320px;
+    text-align:center;
+    border:1px solid #2a2a2a;
+}
 
-        input{
-            width:100%;
-            padding:14px;
-            margin-bottom:15px;
-            border:none;
-            border-radius:10px;
-            background:#2c2c2c;
-            color:white;
-            font-size:16px;
-        }
+h2{
+    color:#ff5a1f;
+    margin-bottom:10px;
+}
 
-        button{
-            width:100%;
-            padding:14px;
-            border:none;
-            border-radius:10px;
-            background:#ff3c00;
-            color:white;
-            font-size:17px;
-            cursor:pointer;
-            font-weight:bold;
-        }
+small{
+    color:#888;
+    display:block;
+    margin-bottom:20px;
+}
 
-        button:hover{
-            opacity:0.9;
-        }
+input{
+    width:100%;
+    padding:12px;
+    margin-bottom:10px;
+    border:none;
+    border-radius:10px;
+    background:#222;
+    color:white;
+}
 
-        .demo{
-            margin-top:15px;
-            color:#aaa;
-            font-size:13px;
-            text-align:center;
-            line-height:1.5;
-        }
-    </style>
+button{
+    width:100%;
+    padding:12px;
+    border:none;
+    border-radius:10px;
+    background:#ff5a1f;
+    color:white;
+    cursor:pointer;
+    font-weight:bold;
+}
 
+.info{
+    margin-top:15px;
+    font-size:13px;
+    color:#aaa;
+    background:#111;
+    padding:10px;
+    border-radius:10px;
+    border:1px solid #222;
+}
+
+</style>
 </head>
+
 <body>
 
-    <div class="login-box">
+<div class="box">
 
-        <h1>🔥 Brutal Food</h1>
+<h2>🔥 Brutal Food POS</h2>
+<small>Sistema de restaurante</small>
 
-        <form method="POST">
+<form method="POST">
 
-            <input type="text" name="user" placeholder="Usuario" required>
+    <input type="text" name="user" placeholder="Usuario" required>
+    <input type="password" name="password" placeholder="Contraseña" required>
 
-            <input type="password" name="password" placeholder="Contraseña" required>
+    <button>Entrar</button>
 
-            <button type="submit">Entrar</button>
+</form>
 
-        </form>
+<div class="info">
+<b>Demo login:</b><br>
+Usuario: <b>nicolasjef</b><br>
+Contraseña: <b>123450808</b>
+</div>
 
-        <!-- SOLO ESTO SE AÑADE -->
-        <div class="demo">
-            Usuario: <b>nicolasjef</b><br>
-            Contraseña: <b>123450808</b>
-        </div>
-
-    </div>
+</div>
 
 </body>
 </html>

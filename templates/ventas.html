@@ -1,153 +1,135 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+<meta charset="UTF-8">
+<title>Ventas - Brutal Food</title>
 
-    <meta charset="UTF-8">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
 
-    <title>Ventas | Brutal Food</title>
+body{
+    margin:0;
+    background:#0d0d0d;
+    color:white;
+    font-family:Poppins;
+    padding:40px;
+}
 
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+.top{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:30px;
+}
 
-    <style>
+h1{
+    color:#ff5a1f;
+}
 
-        *{
-            margin:0;
-            padding:0;
-            box-sizing:border-box;
-            font-family:'Poppins',sans-serif;
-        }
+.btn{
+    background:#ff5a1f;
+    padding:12px 18px;
+    border-radius:12px;
+    color:white;
+    text-decoration:none;
+}
 
-        body{
-            background:#0d0d0d;
-            color:white;
-            padding:40px;
-        }
+.grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+    gap:15px;
+}
 
-        .top{
-            display:flex;
-            justify-content:space-between;
-            align-items:center;
-            margin-bottom:40px;
-        }
+.card{
+    background:#161616;
+    padding:20px;
+    border-radius:16px;
+    border:1px solid #2a2a2a;
+}
 
-        h1{
-            font-size:38px;
-            color:#ff5a1f;
-        }
+.total{
+    font-size:42px;
+    color:#00ff95;
+    font-weight:700;
+}
 
-        .volver{
-            background:#ff5a1f;
-            color:white;
-            text-decoration:none;
-            padding:14px 20px;
-            border-radius:14px;
-            font-weight:600;
-        }
+.small{
+    color:#aaa;
+    font-size:14px;
+}
 
-        .total{
-            background:#161616;
-            border:1px solid #252525;
-            padding:25px;
-            border-radius:24px;
-            margin-bottom:35px;
-        }
+/* tabla */
+table{
+    width:100%;
+    margin-top:20px;
+    border-collapse:collapse;
+}
 
-        .total h2{
-            color:#8d8d8d;
-            margin-bottom:10px;
-        }
+td,th{
+    padding:12px;
+    border-bottom:1px solid #222;
+    text-align:left;
+}
 
-        .total p{
-            font-size:42px;
-            color:#00d084;
-            font-weight:700;
-        }
+th{
+    color:#ff5a1f;
+}
 
-        .ventas{
-            display:grid;
-            gap:20px;
-        }
-
-        .venta{
-            background:#161616;
-            border:1px solid #252525;
-            border-radius:22px;
-            padding:25px;
-        }
-
-        .venta h3{
-            margin-bottom:10px;
-            font-size:24px;
-        }
-
-        .precio{
-            color:#ff5a1f;
-            font-size:28px;
-            font-weight:700;
-            margin-bottom:10px;
-        }
-
-        .fecha{
-            color:#8d8d8d;
-        }
-
-    </style>
-
+</style>
 </head>
 
 <body>
 
-    <div class="top">
+<div class="top">
+<h1>💰 Ventas</h1>
+<a class="btn" href="/">← Volver</a>
+</div>
 
-        <h1>
-            💰 Ventas
-        </h1>
+<!-- TOTAL -->
+<div class="card">
+<h3>Total general</h3>
+<div class="total">
+${{ "{:,.0f}".format(total_general).replace(",", ".") }}
+</div>
+</div>
 
-        <a href="/" class="volver">
-            ← Volver
-        </a>
+<!-- RESUMEN -->
+<h2 style="margin-top:30px;">📊 Resumen por mesa</h2>
 
-    </div>
+<div class="grid">
 
-    <div class="total">
+{% for m in por_mesa %}
+<div class="card">
+<h3>Mesa {{ m[0] }}</h3>
+<p class="small">Ventas: {{ m[1] }}</p>
+<p style="color:#00ff95;font-size:22px;">
+${{ "{:,.0f}".format(m[2]).replace(",", ".") }}
+</p>
+</div>
+{% endfor %}
 
-        <h2>Total General</h2>
+</div>
 
-        <p>
-            ${{ "{:,.0f}".format(total_general).replace(",", ".") }}
-        </p>
+<!-- ULTIMAS VENTAS -->
+<h2 style="margin-top:40px;">🧾 Últimas ventas</h2>
 
-    </div>
+<table>
+<tr>
+<th>Mesa</th>
+<th>Total</th>
+<th>Fecha</th>
+</tr>
 
-    <div class="ventas">
+{% for v in recientes %}
+<tr>
+<td>{{ v[0] }}</td>
+<td>${{ "{:,.0f}".format(v[1]).replace(",", ".") }}</td>
+<td>{{ v[2] }}</td>
+</tr>
+{% endfor %}
 
-        {% for venta in ventas %}
-
-        <div class="venta">
-
-            <h3>
-                Mesa {{ venta[1] }}
-            </h3>
-
-            <div class="precio">
-
-                ${{ "{:,.0f}".format(venta[2]).replace(",", ".") }}
-
-            </div>
-
-            <div class="fecha">
-
-                {{ venta[3] }}
-
-            </div>
-
-        </div>
-
-        {% endfor %}
-
-    </div>
+</table>
 
 </body>
 </html>
