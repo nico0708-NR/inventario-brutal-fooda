@@ -1,3 +1,5 @@
+<!-- templates/index.html -->
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -6,7 +8,7 @@
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Ventas | Brutal Food</title>
+    <title>Brutal Food POS</title>
 
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
@@ -22,8 +24,57 @@
         body{
             background:#0d0d0d;
             color:white;
-            padding:40px;
+            display:flex;
         }
+
+        /* SIDEBAR */
+
+        .sidebar{
+            width:260px;
+            height:100vh;
+            background:#121212;
+            padding:30px 20px;
+            position:fixed;
+            border-right:1px solid #222;
+        }
+
+        .logo{
+            font-size:30px;
+            font-weight:700;
+            color:#ff5a1f;
+            margin-bottom:50px;
+        }
+
+        .menu-sidebar{
+            display:flex;
+            flex-direction:column;
+            gap:15px;
+        }
+
+        .menu-sidebar a{
+            text-decoration:none;
+            color:white;
+            padding:15px;
+            border-radius:14px;
+            transition:0.3s;
+            background:#1b1b1b;
+            font-weight:500;
+        }
+
+        .menu-sidebar a:hover{
+            background:#ff5a1f;
+            transform:translateX(5px);
+        }
+
+        /* CONTENT */
+
+        .content{
+            margin-left:260px;
+            width:100%;
+            padding:35px;
+        }
+
+        /* TOP */
 
         .top{
             display:flex;
@@ -32,65 +83,274 @@
             margin-bottom:40px;
         }
 
-        h1{
+        .title{
             font-size:38px;
-            color:#ff5a1f;
+            font-weight:700;
         }
 
-        .volver{
-            background:#ff5a1f;
-            color:white;
-            text-decoration:none;
-            padding:14px 20px;
+        .status{
+            background:#1f1f1f;
+            padding:12px 20px;
             border-radius:14px;
+            color:#00ff95;
             font-weight:600;
         }
 
-        .total{
+        /* DASHBOARD */
+
+        .dashboard{
+            display:grid;
+            grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+            gap:20px;
+            margin-bottom:40px;
+        }
+
+        .dash-card{
             background:#161616;
             border:1px solid #252525;
             padding:25px;
             border-radius:24px;
-            margin-bottom:35px;
+            transition:0.3s;
         }
 
-        .total h2{
-            color:#8d8d8d;
-            margin-bottom:10px;
+        .dash-card:hover{
+            transform:translateY(-5px);
+            box-shadow:0 0 30px rgba(255,90,31,0.2);
         }
 
-        .total p{
-            font-size:42px;
-            color:#00d084;
+        .dash-card h2{
+            color:#8f8f8f;
+            font-size:18px;
+            margin-bottom:15px;
+        }
+
+        .dash-card p{
+            font-size:36px;
             font-weight:700;
+            color:#ff5a1f;
         }
 
-        .ventas{
+        /* SECTION */
+
+        .section-title{
+            font-size:30px;
+            margin-bottom:25px;
+        }
+
+        /* FORM */
+
+        .form-box{
+            display:flex;
+            gap:15px;
+            margin-bottom:40px;
+            flex-wrap:wrap;
+        }
+
+        .form-box input{
+            background:#1b1b1b;
+            border:none;
+            padding:16px;
+            border-radius:14px;
+            color:white;
+            min-width:220px;
+            outline:none;
+            border:1px solid #2a2a2a;
+        }
+
+        .form-box button{
+            background:#ff5a1f;
+            color:white;
+            border:none;
+            padding:16px 25px;
+            border-radius:14px;
+            cursor:pointer;
+            font-weight:600;
+            transition:0.3s;
+        }
+
+        .form-box button:hover{
+            opacity:0.8;
+        }
+
+        /* PRODUCTOS */
+
+        .productos{
             display:grid;
+            grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
             gap:20px;
+            margin-bottom:50px;
         }
 
-        .venta{
+        .producto{
             background:#161616;
-            border:1px solid #252525;
             border-radius:22px;
-            padding:25px;
+            padding:22px;
+            border:1px solid #252525;
+            transition:0.3s;
         }
 
-        .venta h3{
-            margin-bottom:10px;
+        .producto:hover{
+            transform:scale(1.03);
+        }
+
+        .producto h3{
             font-size:24px;
+            margin-bottom:10px;
         }
 
         .precio{
             color:#ff5a1f;
-            font-size:28px;
+            font-size:24px;
             font-weight:700;
-            margin-bottom:10px;
+            margin-bottom:20px;
         }
 
-        .fecha{
-            color:#8d8d8d;
+        .eliminar{
+            background:#ff2d2d;
+            color:white;
+            padding:12px;
+            border-radius:12px;
+            text-decoration:none;
+            display:inline-block;
+            width:100%;
+            text-align:center;
+        }
+
+        /* MESAS */
+
+        .mesas{
+            display:grid;
+            grid-template-columns:repeat(auto-fit,minmax(340px,1fr));
+            gap:25px;
+        }
+
+        .mesa{
+            background:#161616;
+            border-radius:28px;
+            padding:25px;
+            border:1px solid #252525;
+            transition:0.3s;
+        }
+
+        .mesa:hover{
+            transform:translateY(-5px);
+            box-shadow:0 0 30px rgba(255,90,31,0.15);
+        }
+
+        .mesa-top{
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            margin-bottom:20px;
+        }
+
+        .mesa h2{
+            font-size:28px;
+        }
+
+        .estado{
+            padding:10px 18px;
+            border-radius:50px;
+            font-size:14px;
+            font-weight:600;
+        }
+
+        .libre{
+            background:#0c6b35;
+        }
+
+        .ocupada{
+            background:#7d1c1c;
+        }
+
+        /* PEDIDOS */
+
+        .pedido{
+            background:#111;
+            padding:14px;
+            border-radius:14px;
+            margin-bottom:12px;
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+        }
+
+        .cancelar{
+            color:#ff4d4d;
+            text-decoration:none;
+            font-weight:bold;
+            font-size:18px;
+        }
+
+        /* BOTONES PRODUCTOS */
+
+        .productos-mesa{
+            margin-top:20px;
+        }
+
+        .productos-mesa a{
+            display:block;
+            background:#ff5a1f;
+            color:white;
+            text-decoration:none;
+            padding:13px;
+            border-radius:14px;
+            margin-bottom:10px;
+            text-align:center;
+            transition:0.3s;
+            font-weight:500;
+        }
+
+        .productos-mesa a:hover{
+            opacity:0.85;
+        }
+
+        /* TOTAL */
+
+        .total{
+            margin-top:20px;
+            font-size:28px;
+            color:#ff5a1f;
+            font-weight:700;
+        }
+
+        /* COBRAR */
+
+        .cobrar{
+            display:block;
+            background:#00b97d;
+            color:white;
+            text-decoration:none;
+            text-align:center;
+            padding:15px;
+            border-radius:14px;
+            margin-top:20px;
+            font-weight:700;
+            transition:0.3s;
+        }
+
+        .cobrar:hover{
+            opacity:0.85;
+        }
+
+        /* RESPONSIVE */
+
+        @media(max-width:900px){
+
+            body{
+                flex-direction:column;
+            }
+
+            .sidebar{
+                width:100%;
+                height:auto;
+                position:relative;
+            }
+
+            .content{
+                margin-left:0;
+            }
+
         }
 
     </style>
@@ -99,53 +359,216 @@
 
 <body>
 
-    <div class="top">
+    <!-- SIDEBAR -->
 
-        <h1>
-            💰 Ventas
-        </h1>
+    <div class="sidebar">
 
-        <a href="/" class="volver">
-            ← Volver
-        </a>
+        <div class="logo">
+            🔥 Brutal Food
+        </div>
+
+        <div class="menu-sidebar">
+
+            <a href="/">🏠 Dashboard</a>
+
+            <a href="#productos">🍔 Productos</a>
+
+            <a href="#mesas">🍽️ Mesas</a>
+
+            <a href="/ventas">💰 Ventas</a>
+
+            <a href="/logout">🚪 Cerrar sesión</a>
+
+        </div>
 
     </div>
 
-    <div class="total">
+    <!-- CONTENT -->
 
-        <h2>Total General</h2>
+    <div class="content">
 
-        <p>
-            ${{ "{:,.0f}".format(total_general).replace(",", ".") }}
-        </p>
+        <!-- TOP -->
 
-    </div>
+        <div class="top">
 
-    <div class="ventas">
+            <div class="title">
+                Brutal Food POS
+            </div>
 
-        {% for venta in ventas %}
+            <div class="status">
+                ● Sistema Online
+            </div>
 
-        <div class="venta">
+        </div>
 
-            <h3>
-                Mesa {{ venta[1] }}
-            </h3>
+        <!-- DASHBOARD -->
 
-            <div class="precio">
+        <div class="dashboard">
 
-                ${{ "{:,.0f}".format(venta[2]).replace(",", ".") }}
+            <div class="dash-card">
+
+                <h2>Mesas</h2>
+
+                <p>{{ mesas|length }}</p>
 
             </div>
 
-            <div class="fecha">
+            <div class="dash-card">
 
-                {{ venta[3] }}
+                <h2>Productos</h2>
+
+                <p>{{ menu|length }}</p>
+
+            </div>
+
+            <div class="dash-card">
+
+                <h2>Estado</h2>
+
+                <p>Activo</p>
 
             </div>
 
         </div>
 
-        {% endfor %}
+        <!-- PRODUCTOS -->
+
+        <h1 class="section-title" id="productos">
+            🍔 Productos
+        </h1>
+
+        <form class="form-box" action="/agregar_producto" method="POST">
+
+            <input 
+                type="text"
+                name="nombre"
+                placeholder="Nombre producto"
+                required
+            >
+
+            <input 
+                type="number"
+                name="precio"
+                placeholder="Precio"
+                required
+            >
+
+            <button type="submit">
+                Agregar producto
+            </button>
+
+        </form>
+
+        <div class="productos">
+
+            {% for producto in menu %}
+
+            <div class="producto">
+
+                <h3>{{ producto[1] }}</h3>
+
+                <div class="precio">
+                    ${{ "{:,.0f}".format(producto[2]).replace(",", ".") }}
+                </div>
+
+                <a href="/eliminar_producto/{{ producto[0] }}" class="eliminar">
+                    Eliminar
+                </a>
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+        <!-- MESAS -->
+
+        <h1 class="section-title" id="mesas">
+            🍽️ Mesas
+        </h1>
+
+        <div class="mesas">
+
+            {% for mesa in mesas %}
+
+            <div class="mesa">
+
+                <div class="mesa-top">
+
+                    <h2>
+                        Mesa {{ mesa.id }}
+                    </h2>
+
+                    {% if mesa.estado == "Libre" %}
+
+                        <div class="estado libre">
+                            Libre
+                        </div>
+
+                    {% else %}
+
+                        <div class="estado ocupada">
+                            Ocupada
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+                {% for pedido in mesa.pedidos %}
+
+                <div class="pedido">
+
+                    <div>
+
+                        {{ pedido[2] }}
+
+                        -
+
+                        ${{ "{:,.0f}".format(pedido[3]).replace(",", ".") }}
+
+                    </div>
+
+                    <a href="/cancelar_pedido/{{ pedido[0] }}" class="cancelar">
+                        ✖
+                    </a>
+
+                </div>
+
+                {% endfor %}
+
+                <div class="productos-mesa">
+
+                    {% for producto in menu %}
+
+                    <a href="/ordenar/{{ mesa.id }}/{{ producto[0] }}">
+
+                        Agregar {{ producto[1] }}
+
+                    </a>
+
+                    {% endfor %}
+
+                </div>
+
+                <div class="total">
+
+                    Total:
+                    ${{ "{:,.0f}".format(mesa.total).replace(",", ".") }}
+
+                </div>
+
+                <a href="/limpiar/{{ mesa.id }}" class="cobrar">
+
+                    💰 Cobrar Mesa
+
+                </a>
+
+            </div>
+
+            {% endfor %}
+
+        </div>
 
     </div>
 
