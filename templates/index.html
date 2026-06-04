@@ -2,172 +2,152 @@
 <html lang="es">
 <head>
 
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
 
-<title>Nicolás | Developer</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <title>Ventas | Brutal Food</title>
 
-<style>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:'Poppins',sans-serif;
-}
+    <style>
 
-body{
-background:#0d0d0d;
-color:white;
-}
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+            font-family:'Poppins',sans-serif;
+        }
 
-header{
-height:100vh;
-display:flex;
-flex-direction:column;
-justify-content:center;
-align-items:center;
-text-align:center;
-padding:20px;
-}
+        body{
+            background:#0d0d0d;
+            color:white;
+            padding:40px;
+        }
 
-h1{
-font-size:70px;
-margin-bottom:20px;
-}
+        .top{
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            margin-bottom:40px;
+        }
 
-span{
-color:#ff5a1f;
-}
+        h1{
+            font-size:38px;
+            color:#ff5a1f;
+        }
 
-p{
-font-size:22px;
-max-width:700px;
-color:#a0a0a0;
-margin-bottom:30px;
-}
+        .volver{
+            background:#ff5a1f;
+            color:white;
+            text-decoration:none;
+            padding:14px 20px;
+            border-radius:14px;
+            font-weight:600;
+        }
 
-.btn{
-background:#ff5a1f;
-padding:16px 30px;
-border-radius:14px;
-color:white;
-text-decoration:none;
-font-weight:600;
-}
+        .total{
+            background:#161616;
+            border:1px solid #252525;
+            padding:25px;
+            border-radius:24px;
+            margin-bottom:35px;
+        }
 
-.projects{
-padding:80px 10%;
-}
+        .total h2{
+            color:#8d8d8d;
+            margin-bottom:10px;
+        }
 
-.projects h2{
-font-size:42px;
-margin-bottom:40px;
-}
+        .total p{
+            font-size:42px;
+            color:#00d084;
+            font-weight:700;
+        }
 
-.grid{
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
-gap:25px;
-}
+        .ventas{
+            display:grid;
+            gap:20px;
+        }
 
-.card{
-background:#161616;
-padding:25px;
-border-radius:24px;
-border:1px solid #252525;
-transition:0.3s;
-}
+        .venta{
+            background:#161616;
+            border:1px solid #252525;
+            border-radius:22px;
+            padding:25px;
+        }
 
-.card:hover{
-transform:translateY(-5px);
-box-shadow:0 0 25px rgba(255,90,31,0.2);
-}
+        .venta h3{
+            margin-bottom:10px;
+            font-size:24px;
+        }
 
-.card h3{
-font-size:28px;
-margin-bottom:15px;
-}
+        .precio{
+            color:#ff5a1f;
+            font-size:28px;
+            font-weight:700;
+            margin-bottom:10px;
+        }
 
-.card p{
-font-size:16px;
-margin-bottom:20px;
-}
+        .fecha{
+            color:#8d8d8d;
+        }
 
-.card a{
-display:inline-block;
-background:#ff5a1f;
-padding:12px 20px;
-border-radius:12px;
-text-decoration:none;
-color:white;
-}
-
-footer{
-padding:50px;
-text-align:center;
-color:#7a7a7a;
-}
-
-</style>
+    </style>
 
 </head>
 
 <body>
 
-<header>
+    <div class="top">
 
-<h1>
-Nicolás <span>Developer</span>
-</h1>
+        <h1>
+            💰 Ventas
+        </h1>
 
-<p>
-Desarrollador enfocado en crear sistemas web modernos,
-interfaces premium y software funcional.
-</p>
+        <a href="/" class="volver">
+            ← Volver
+        </a>
 
-<a href="#projects" class="btn">
-Ver proyectos
-</a>
+    </div>
 
-</header>
+    <div class="total">
 
-<section class="projects" id="projects">
+        <h2>Total General</h2>
 
-<h2>
-🚀 Proyectos
-</h2>
+        <p>
+            ${{ "{:,.0f}".format(total_general).replace(",", ".") }}
+        </p>
 
-<div class="grid">
+    </div>
 
-<div class="card">
+    <div class="ventas">
 
-<h3>
-🔥 Brutal Food POS
-</h3>
+        {% for venta in ventas %}
 
-<p>
-Sistema POS premium para restaurantes desarrollado con Flask y SQLite.
-Incluye login, dashboard, pedidos y ventas.
-</p>
+        <div class="venta">
 
-<a href="#">
-Ver proyecto
-</a>
+            <h3>
+                Mesa {{ venta[1] }}
+            </h3>
 
-</div>
+            <div class="precio">
 
-</div>
+                ${{ "{:,.0f}".format(venta[2]).replace(",", ".") }}
 
-</section>
+            </div>
 
-<footer>
+            <div class="fecha">
 
-© 2026 Nicolás Developer
+                {{ venta[3] }}
 
-</footer>
+            </div>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
 
 </body>
 </html>
